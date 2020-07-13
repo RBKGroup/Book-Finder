@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-
 mongoose
     .connect("mongodb://localhost:27017/booksDB", { useNewUrlParser: true })
     .then(() => {
@@ -8,14 +7,13 @@ mongoose
     .catch((err) => {
         console.log(" Err when conecting To DataBase :( ", err);
     });
-
-let booksSchema = mongoose.Schema({
-    img: { type: String },
-    title: { type: String },
-    author: { type: String },
-    dateOfPublication: { type: String },
+const RegSchema = mongoose.Schema({
+    FirstName: { type: String },
+    LastName: { type: String },
+    Email: { type: String },
+    Password: { type: String }
 });
 
-let BooksModel = mongoose.model("books", booksSchema);
+let RegModel = mongoose.model("users", RegSchema);
 
-module.exports.BooksModel = BooksModel;
+module.exports.RegModel = RegModel;
