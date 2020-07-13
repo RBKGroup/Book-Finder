@@ -1,117 +1,101 @@
 const express = require("express");
 let app = express();
-
-const cors = require("cors");
-
+var router = express.Router();
 var bodyParser = require("body-parser");
-const bcrypt = require("bcrypt");
-app.use(cors())
-
-
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
-app.use(express.static(__dirname + "/../public"));
 
-const db = require("../database");
+const cors = require("cors")
+router.use(cors())
+
+app.use(express.static(__dirname + '/../public'));
+
+const db = require("../database/index.js");
+const log = require("../database/login.js");
+const reg = require("../database/regester");
 let BooksModel = db.BooksModel;
-
+let loginModel = log.loginModel;
+let RegModel = reg.RegModel;
 app.post("/book", (req, res) => {
-  const { img, title, author, dateOfPublication } = req.body;
-  let bookDocumentation = new BooksModel({
-    img,
-    title,
-    author,
-    dateOfPublication,
-  });
-  bookDocumentation
-    .save()
-    .then(() => res.status(201).send("saved"))
-    .catch((err) => res.status(500).send(err + "err"));
+    const { img, title, author, dateOfPublication } = req.body;
+    let bookDocumentation = new BooksModel({ img, title, author, dateOfPublication });
+
+    bookDocumentation.save().then(() =>
+        res.status(201).send("saved"))
+        .catch((err) => res.status(500).send(err + "err"))
 });
 
-// app.post("/registers", (req, res) => {
-//   const userinfo = ({ firstName, lastName, email, password } = req.body);
-//   db.findOne({
-//     email: req.body.email,
-//   })
-//     .then((user) => {
-//       if (!user) {
-//         bcrypt.hash(req.body.password, 10, (err, hash) => {
-//           userinfo.password = hash;
-//           db.create(userinfo)
-//             .then((user) => {
-//               res.json({ status: user.email + "Registered!" });
-//             })
-//             .catch((err) => {
-//               res.send("error: " + err);
-//             });
-//         });
-//       } else {
-//         res.json({ error: "User already exists" });
-//       }
-//     })
-//     .catch((err) => {
-//       res.send("error: " + err);
+
+
+app.get("/favorite", (req, res) => {
+    BooksModel.find({})
+        .then((result) => {
+            res.send(result);
+            console.log(result);
+        })
+        .catch((err) => {
+            res.send(err);
+        });
+});
+// app.post('/register', function (req, res, next) {
+
+//     const { FirstName, lastName, Email, Password } = req.body;
+//     let regDocumentation = new RegModel({ FirstName, lastName, Email, Password });
+
+//     // regDocumentation.save(user, function (err, newUser) {
+//     //     if (err) return next(err);
+//     //     req.session.user = email;
+//     //     return res.send('Logged In!');
+//     // });
+//     regDocumentation.save().then(() =>
+//     res.status(201).send("saved"))
+//     .catch((err) => res.status(500).send(err + "err"))
+// });
+
+
+app.post('/register', (req, res) => {
+
+    const { FirstName, LastName, Email, Password } = req.body;
+    let regDocumentation = new RegModel({ FirstName, LastName, Email, Password });
+
+    regDocumentation.save().then(() =>
+        res.status(201).send("saved"))
+        .catch((err) => res.status(500).send(err + "err"))
+});
+
+// app.post('/login', function (req, res, next) {
+//     var email = req.body.email;
+//     var password = req.body.pass;
+
+//     loginModel.findOne({Email: email, Password: password}, function(err, user) {
+//        if(err) return next(err);
+//        if(!user) return res.send('Not logged in!');
+
+//        req.session.user = email;
+//        return res.send('Logged In!');
 //     });
-// });
+//  });
 
-// app.get("/favorite", (req, res) => {
-//   BooksModel.find({})
-//     .then((result) => {
-//       res.send(result);
-//       console.log(result);
-//     })
-//     .catch((err) => {
-//       res.send(err);
-//     });
-// });
+app.get('/login/:Email/:Password', (req, res) => {
 
-// app.get("/", function (req, res, next) {
-//   res.render("index", { title: "Express" });
-// });
+    const { Email, Password } = req.params;
 
-// app.post("/login", function (req, res) {
-//   var username = req.body.username;
-//   var password = req.body.password;
+    var email = req.body.Email;
+    var password = req.body.Password;
 
-//   username.findOne({ username: username, password: password }, function (
-//     err,
-//     user
-//   ) {
-//     if (err) {
-//       console.log(err);
-//       return res.status(500).send();
-//     }
-//     // if (!user) {
-//     //   return res.status(404).send();
-//     // }
-//     return res.status(200).send();
-//   });
-// });
-// app.get("/register", function (req, res) {
-//   res.render("");
-// });
-
-// app.post("/register", function (req, res) {
-//   var username = req.body.username;
-//   var password = req.body.password;
-//   var firstname = req.body.firstname;
-//   var lastname = req.body.lastname;
-
-//   var newuser = new db();
-//   newuser.username = username;
-//   newuser.password = password;
-//   newuser.firstname = firstname;
-//   newuser.lastname = lastname;
-//   newuser
-//     .save()
-//     .then(() => res.status(201).send("saved!!"))
-//     .catch((err) => res.status(500).send(err + "err"));
-// });
-
+    RegModel.find({ Email, Password })
+        .then((result) => {
+            if (result.length > 0) {
+                res.send('Logged In!');
+            }else{
+                res.send('Not logged in!');
+            }
+            console.log(result);
+        })
+        .catch((err) => {
+            res.send(err);
+        });
+});
 var port = 3000;
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
-});
-
-
+    console.log(`Example app listening at http://localhost:${port}`)});
