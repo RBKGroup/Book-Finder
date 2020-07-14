@@ -19,7 +19,7 @@ class SearchBooks extends React.Component {
     console.log(e);
     e.innerHTML = "";
     e.preventDefault();
-    var { serch } = this.state;
+    // var { search } = this.state;
     axios
       .get("http://localhost:3000/", this.state)
       .then((res) => {
