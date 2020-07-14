@@ -18,6 +18,7 @@
 >>>>>>> 0f211e7a47e9e7e9d4ec7c855d84b9a99b53db03
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1"
   },
   "scripts": {
