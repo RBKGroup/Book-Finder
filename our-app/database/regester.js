@@ -7,11 +7,13 @@ mongoose
     .catch((err) => {
         console.log(" Err when conecting To DataBase :( ", err);
     });
-const loginSchema = mongoose.Schema({
+const RegSchema = mongoose.Schema({
+    FirstName: { type: String },
+    LastName: { type: String },
     Email: { type: String },
-    Password: { type: String },
+    Password: { type: String }
 });
 
-var loginModel = mongoose.model('Userlog', loginSchema);
+let RegModel = mongoose.model("users", RegSchema);
 
-module.exports.loginModel = loginModel;
+module.exports.RegModel = RegModel;
