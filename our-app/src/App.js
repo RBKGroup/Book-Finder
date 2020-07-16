@@ -9,18 +9,19 @@ import {
   Route,
   Redirect,
 } from "react-router-dom";
-
+ import App2 from './App2'
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isAuthenticated: false,
+      
     };
   }
-  setUserAuth = (value) => this.setState({ isAuthenticated: value });
+  setUserAuth = (value) => this.setState({ isAuthenticated: true });
   render() {
     return (
       <div className="app">
+       
         <Router>
           <Switch>
             <Route path="/auth/login">
@@ -33,7 +34,7 @@ class App extends React.Component {
               <SearchBooks />
             </Route> */}
             <PrivateRoute isAuthenticated={this.state.isAuthenticated} path="/">
-              <SearchBooks />
+              <App2 />
             </PrivateRoute>
             {/* <PrivateRoute
               isAuthenticated={this.state.isAuthenticated}

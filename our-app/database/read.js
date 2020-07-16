@@ -9,15 +9,13 @@ mongoose
     console.log(" Err when conecting To DataBase :( ", err);
   });
 
-let booksSchema = mongoose.Schema({
+let readbooksSchema = mongoose.Schema({
  title: { type: String },
- author:[{
-    type:String,
-}],
  dateOfPublication: { type: String },
-  img: { type: String }
+  img: { type: String },
+  readlearter : {type : String}
 });
 
 
-let BooksModel = mongoose.model("books", booksSchema);
-module.exports.BooksModel = BooksModel;
+let ReadModel = mongoose.model("readbooks", readbooksSchema);
+module.exports.ReadModel = ReadModel;

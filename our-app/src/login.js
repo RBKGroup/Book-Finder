@@ -1,5 +1,5 @@
 import React from "react";
-
+import cors from "cors";
 import { Link, withRouter } from "react-router-dom";
 import axios from "axios";
 
@@ -25,7 +25,7 @@ class Login extends React.Component {
 
     axios
       .get(
-        "http://localhost:5000/login",
+        `http://localhost:5000/login/${this.state.email}/${this.state.password}`,
         {
           user: {
             email: email,
@@ -35,25 +35,27 @@ class Login extends React.Component {
         { withCredentials: true }
       )
       .then((response) => {
-        if (response.data.logged_in) {
-          this.props.handleSuccessfulAuth(response.data);
-     this.props.setUserAuth(true);
-     this.props.history.push("/searchBook");
-      }
-    })
-    .catch((error) => {
-      console.log("login error", error);
-      this.props.setUserAuth(false)
-    });
+        if (response.data === true) {
+          this.props.setUserAuth(true);
+          this.props.history.push("/auth/Search");
+        } else {
+          alert("LogIn faild . . Make sure the information is correct");
+        }
+      })
+      .catch((error) => {
+        console.log("login error", error);
+        this.props.setUserAuth(false);
+      });
     event.preventDefault();
   }
 
   render() {
-    console.log(this.props.history);
     return (
-      <div>
+      <div class="loginform">
+        <h1>Log in Now</h1>
         <form onSubmit={this.handleSubmit}>
           <input
+            class="inputbox"
             type="email"
             name="email"
             placeholder="Email"
@@ -61,8 +63,10 @@ class Login extends React.Component {
             onChange={this.handleChange}
             required
           />
+          <br />
 
           <input
+            class="inputbox"
             type="password"
             name="password"
             placeholder="Password"
@@ -70,9 +74,14 @@ class Login extends React.Component {
             onChange={this.handleChange}
             required
           />
-
-          <button type="submit">Login</button>
-          <Link to="/auth/reg"> register now</Link>
+          <br />
+          <button type="submit" class="butooon">
+            Login
+          </button>
+          <hr />
+          <p>
+            Dont have an account ? <Link to="/auth/reg"> Sgin up</Link>{" "}
+          </p>
         </form>
       </div>
     );

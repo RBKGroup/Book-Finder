@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { Link, withRouter } from "react-router-dom";
+import cors from "cors";
 
 class Registration extends React.Component {
   constructor(props) {
@@ -26,35 +27,37 @@ class Registration extends React.Component {
 
     axios
       .post(
-        "http://localhost:5000/register",
+        `http://localhost:5000/register`,
         {
           FirstName,
           LastName,
           Email,
           Password,
-        },
-        { withCredentials: true }
+        }
+        // { withCredentials: true }
       )
       .then((response) => {
-        if (response.data.status === "created") {
-          this.props.handleSuccessfulAuth(response.data);
-          this.props.setUserAuth(true)
-          this.props.history.push("/searchBook");
+        if (response.data === "created") {
+          console.log("NOW LOGIN TO CONFIRM YOUR  ACCOUNT");
+          this.props.setUserAuth(true);
+          this.props.history.push("/auth/login");
         }
+        alert("NOW LOGIN TO CONFIRM YOUR  ACCOUNT");
       })
       .catch((error) => {
         console.log("registration error", error);
-        this.props.setUserAuth(false)
+        this.props.setUserAuth(false);
       });
     event.preventDefault();
   }
 
   render() {
-
     return (
-      <div>
+      <div class="loginform">
+        <h1>Register</h1>
         <form onSubmit={this.handleSubmit}>
           <input
+            class="inputbox"
             type="text"
             name="FirstName"
             placeholder="FirstName"
@@ -62,8 +65,10 @@ class Registration extends React.Component {
             onChange={this.handleChange}
             required
           />
+          <br />
 
           <input
+            class="inputbox"
             type="text"
             name="LastName"
             placeholder="LastName"
@@ -71,8 +76,10 @@ class Registration extends React.Component {
             onChange={this.handleChange}
             required
           />
+          <br />
 
           <input
+            class="inputbox"
             type="email"
             name="Email"
             placeholder="Email"
@@ -80,7 +87,9 @@ class Registration extends React.Component {
             onChange={this.handleChange}
             required
           />
+          <br />
           <input
+            class="inputbox"
             type="password"
             name="Password"
             placeholder="Password"
@@ -88,9 +97,11 @@ class Registration extends React.Component {
             onChange={this.handleChange}
             required
           />
+          <br />
 
-          <button type="submit">Register</button>
-          <Link to="/auth/login"> login now</Link>
+          <button type="submit" class="butooon">Register</button><hr />
+            <p>you have alredy email ! <Link to="/auth/login"> login now</Link></p>
+          
         </form>
       </div>
     );
